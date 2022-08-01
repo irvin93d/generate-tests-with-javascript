@@ -1,0 +1,28 @@
+{
+  "name": "generate-tests-with-javascript",
+  "version": "1.0.0",
+  "description": "Generate test data with quick-check (fast-check)!",
+  "scripts": {
+    "test": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/irvin93d/generate-tests-with-javascript.git"
+  },
+  "keywords": [
+    "fastcheck",
+    "quickcheck",
+    "test",
+    "tabletest",
+    "arbitrarytest"
+  ],
+  "author": "Duane Irvin",
+  "license": "MIT",
+  "homepage": "https://github.com/irvin93d/quickcheck-bash-scripts#readme",
+  "devDependencies": {
+    "vitest": "^0.20.2"
+  },
+  "dependencies": {
+    "fast-check": "^3.1.1"
+  }
+}
