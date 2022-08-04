@@ -18,7 +18,9 @@ export interface IceCreamV2 {
 // Migrations
 //
 
-export function migrate({ name, isCreamy, keywords }: IceCreamV1): IceCreamV2 {
+export function migrate(v1: IceCreamV1): IceCreamV2 {
+  const { name, isCreamy, keywords } = v1;
+
   let creaminess = 0;
   if (keywords.includes("mega creamy")) {
     creaminess = 100;
@@ -31,11 +33,8 @@ export function migrate({ name, isCreamy, keywords }: IceCreamV1): IceCreamV2 {
   return { name, keywords, creaminess };
 }
 
-export function rollback({
-  name,
-  creaminess,
-  keywords,
-}: IceCreamV2): IceCreamV1 {
+export function rollback(v2: IceCreamV2): IceCreamV1 {
+  const { name, creaminess, keywords } = v2;
   // BUG: isCreamy: icecream.creaminess >= 50,
   const isCreamy = creaminess === 50;
   return { name, isCreamy, keywords };

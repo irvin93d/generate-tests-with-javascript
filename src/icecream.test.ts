@@ -9,31 +9,32 @@ fc.configureGlobal({ numRuns: 100, verbose: fc.VerbosityLevel.VeryVerbose });
 /**
  * Basic unit-test. Tests one case.
  */
-test("should migrate and rollback correctly", () => {
-  const icecreamV1: IceCreamV1 = {
+test("should migrate and rollback", () => {
+  const v1: IceCreamV1 = {
     name: "Twister",
     isCreamy: false,
     keywords: ["the best"],
   };
-  const icecreamV2: IceCreamV2 = {
+  const v2: IceCreamV2 = {
     name: "Twister",
     creaminess: 0,
     keywords: ["the best"],
   };
 
   // Test migration
-  const migratedIcecream = migrate(icecreamV1);
-  expect(migratedIcecream).toStrictEqual(icecreamV2);
+  const migrated = migrate(v1);
+  expect(migrated).toStrictEqual(v2);
 
   // Test rollback
-  const rolledbackIceCream = rollback(migratedIcecream);
-  expect(rolledbackIceCream).toStrictEqual(icecreamV1);
+  const rolledBack = rollback(migrated);
+  expect(rolledBack).toStrictEqual(v1);
 });
 
 /**
- * IceCreamV1 generator. Creates a random ice-cream of V1.
+ * IceCreamV1 generator.
+ * Creates a random ice-cream of V1.
  */
-const arbitraryIceCreamV1 = fc.record({
+const arbitraryV1 = fc.record({
   // Create a random string
   name: fc.string(),
   // Either true or false
@@ -54,16 +55,23 @@ const arbitraryIceCreamV1 = fc.record({
 });
 
 /**
- * Property test. For any migration followed by a rollback,
- * we'll get the same value back.
+ * Property test. For any migration followed
+ * by a rollback, we'll get the same value back.
  */
-test.skip("rollback(migrate(data)) === data", () => {
+test("rollback(migrate(data)) === data", () => {
   fc.assert(
-    fc.property(arbitraryIceCreamV1, (icecream) => {
-      if (icecream.keywords.some((keyword) => keyword.includes("creamy"))) {
-        fc.pre(icecream.isCreamy);
-      }
-      expect(rollback(migrate(icecream))).toStrictEqual(icecream);
+    fc.property(arbitraryV1, (v1) => {
+      skipInvalidV1(v1);
+
+      const migrated = migrate(v1);
+      const rolledBack = rollback(migrated);
+      expect(rolledBack).toStrictEqual(v1);
     })
   );
 });
+
+const skipInvalidV1 = (v1: IceCreamV1) => {
+  if (v1.keywords.some((keyword) => keyword.includes("creamy"))) {
+    fc.pre(v1.isCreamy);
+  }
+};
